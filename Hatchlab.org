@@ -1,0 +1,61 @@
+#+title: Population Testbed
+#+options: toc:nil
+
+* Initial prototype
+** System
+*** Front End
+**** Description
+***** Visualization
+****** Collection statistics
+****** Collection gallery
+****** Single asset view
+***** Definitition
+****** Create collections
+****** Create parts
+****** Create rules
+***** Modification
+****** Add parts to collection
+****** Edit part metadata and rarity
+****** Edit and apply rules
+**** Tech Stack
+***** JS/TS
+***** Threejs
+***** React
+***** React three fiber
+https://github.com/pmndrs/react-three-fiber
+*** Back End
+**** Description
+***** Marshall and Parse
+****** Part Specs
+****** Collection Specs
+****** Rule Specs
+***** Generate Statistics on collections
+****** Total population
+****** Rarity stats
+***** Generate members of collection
+****** JSON spec of all population for export
+****** Assemble individual collection members' geometry
+**** Tech Stack
+***** Rust
+***** Connectors
+** Tasks
+*** Part/Segment Collections
+**** CLI system which takes json collection description and outputs json for all possibilities
+***** Segments are categories of parts
+***** No transform of any kind, simply enumerate all combinations, one part per segment
+**** Lift enumeration system into a web API
+**** Build simple front-end
+***** Predefined collection spec
+***** Hit API to build population and report stats
+**** UI to define collection in front-end
+***** Collections still groups of tags, parts within segments
+*** Rules on Part/Segment Collections
+**** Expand collection schema to include rules
+***** Backend understands and applies rules
+**** Frontend to define rules
+*** Geometry for parts
+**** Expand collection schema to include part geometry
+**** Frontend ability to attach geometry to parts
+**** Add query to backend to get assembled creature geometry
+**** Add frontend ability to view assembled creature
+**** Front-end gallery
