@@ -1,61 +1,120 @@
-#+title: Population Testbed
+#+title: Hatchlab Prototype
 #+options: toc:nil
 
-* Initial prototype
-** System
-*** Front End
-**** Description
-***** Visualization
-****** Collection statistics
-****** Collection gallery
-****** Single asset view
-***** Definitition
-****** Create collections
-****** Create parts
-****** Create rules
-***** Modification
-****** Add parts to collection
-****** Edit part metadata and rarity
-****** Edit and apply rules
-**** Tech Stack
-***** JS/TS
-***** Threejs
-***** React
-***** React three fiber
+* Background and Goals
+The first RTFKT contract will involve @Brendan working with RTFKT
+stakeholders to create and curate *populations* of creatures. Each such
+population will represent variants of a "character".  To wit, the
+*specification* for such a *population* will consist of several
+*"segments"* such as "head", "torso", "legs", "hat".  Each segment
+will in turn contain a selection of options for *"parts"* which can be
+used to fill a *segment* for a particular creature.  The definition
+for an instance of a character will contain a single *part* from each
+and every *segment*.
+
+This effort intends to create a standalone prototype of the subset of
+Hatchlab functionality which will be relevant to Brendan's current
+work on the first RTFKT contract.  As such, there will be two main
+goals:
+1) Provide utilities for Brendan to use during the course of his work
+2) Develop a prototype web app in parallel towards the end of being a
+   platform for performing this work.
+In addition, there are "soft" goals which flow out:
+1) Explore the space of concepts involved in this type of work to
+   guide and form the tools and explore what Hatchlab should be
+2) Gain proficiency in [[https://threejs.org][threejs]] and evaluate it as a replacement for Babylonjs in Hypo-Box
+
+* System Description
+** Terminology
+| *Term*                     | *Definition*                                                                                                                                          |
+|----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| *Frontend*                 | The user facing web application used to manage *populations* and their *specifications*                                                               |
+| *Backend*                  | The system backend consists of 1) Algorithms to manage *populations* 2) A Web API to enable the *frontend* to access these algorithms and manage data |
+| *CLI*                      | Command line interface                                                                                                                                |
+| *Population Specification* | Information used to generate a *population*, consisting of descriptions of the *segments*, the *parts*, and the *rules*                               |
+| *Population*               | A group of creatures conforming to a *specification* consisting                                                                                       |
+| *Creature*                 | An assembled member of a *population* consisting of a single *part* from each specified *segment*                                                     |
+| *Segment*                  | A group of *part* options, one of which must be included in each creature in a *population*, /example: Head/                                          |
+| *Part*                     | One option to fulfill the requirement of a *segment*, /example: Lion Head/.  Each part will likely be associated with 3D geometry                     |
+| *Rule*                     | A relationship, initially between parts, which restricts the possible members of a *population*.  /example: "Lion Head" *always* with "Snake Torso"/  |
+| *API*                      | Application Program Interface, a set of published functions and types suitable to provide a block of functionality to API consumers                         |
+
+** CLI
+Of the possible work in this project, the most likely to be
+immediately useful to Brendan is a *CLI* for enumerating populations.
+This CLI will allow Brendan to specify a population specification and
+receive back a description of every member of the described
+population. The intention is to have Houdini side facilities to render
+this population description into assets corresponding to the creatures
+in the population.
+
+This CLI will share the algorithmic core of the web backend in library
+form, and also its Rust based tech stack.
+** Back End
+*** Description
+The back end of the web app will provide an API which will:
+- Allow management of *population specifications*, *segments*,
+  *parts*, and *rules*
+- Allow generation of *populations* which accord to their
+  specifications
+- Allow for queries on overall statistics of a *population*
+** Tech Stack
+**** Rust
+We selected the [[https://rust-lang.org][Rust]] programming language as the best choice for
+backend development, based on these considerations:
+- *Speed*: The back end will need to process geometry at the vertex
+  level, requiring a systems language capable of generating snappy
+  executables
+- *Safety*: Because the back end will be exposed to the web, Rust's
+  safety ensures that the API will have a minimum of vulnerabilities
+- *Facilities*: Rust offers excellend facilities for dealing with the
+  web, including officially supported AWS libraries provided by
+  Amazon.
+- *Scalability*: Rust's ahead of time compilation and static type
+  system allow it to scale easily to large groups of developers and
+  complex code bases.  Apparent "slowness" compared to highly dynamic
+  languages such as Javascript and Python is temporary at best, and
+  will be quickly overtaken by the reduced ongoing costs of
+  development and the faster runtime execution
+
+** Front End
+*** Description
+**** Visualization
+***** Collection statistics
+***** Collection gallery
+***** Single asset view
+**** Definitition
+***** Create collections
+***** Create parts
+***** Create rules
+**** Modification
+***** Add parts to collection
+***** Edit part metadata and rarity
+***** Edit and apply rules
+*** Tech Stack
+**** JS/TS
+**** Threejs
+**** React
+**** React three fiber
 https://github.com/pmndrs/react-three-fiber
-*** Back End
-**** Description
-***** Marshall and Parse
-****** Part Specs
-****** Collection Specs
-****** Rule Specs
-***** Generate Statistics on collections
-****** Total population
-****** Rarity stats
-***** Generate members of collection
-****** JSON spec of all population for export
-****** Assemble individual collection members' geometry
-**** Tech Stack
-***** Rust
-***** Connectors
-** Tasks
-*** Part/Segment Collections
-**** CLI system which takes json collection description and outputs json for all possibilities
-***** Segments are categories of parts
-***** No transform of any kind, simply enumerate all combinations, one part per segment
-**** Lift enumeration system into a web API
-**** Build simple front-end
-***** Predefined collection spec
-***** Hit API to build population and report stats
-**** UI to define collection in front-end
-***** Collections still groups of tags, parts within segments
-*** Rules on Part/Segment Collections
-**** Expand collection schema to include rules
-***** Backend understands and applies rules
-**** Frontend to define rules
-*** Geometry for parts
-**** Expand collection schema to include part geometry
-**** Frontend ability to attach geometry to parts
-**** Add query to backend to get assembled creature geometry
-**** Add frontend ability to view assembled creature
-**** Front-end gallery
+* Tasks
+** Part/Segment Collections
+*** CLI system which takes json collection description and outputs json for all possibilities
+**** Segments are categories of parts
+**** No transform of any kind, simply enumerate all combinations, one part per segment
+*** Lift enumeration system into a web API
+*** Build simple front-end
+**** Predefined collection spec
+**** Hit API to build population and report stats
+*** UI to define collection in front-end
+**** Collections still groups of tags, parts within segments
+** Rules on Part/Segment Collections
+*** Expand collection schema to include rules
+**** Backend understands and applies rules
+*** Frontend to define rules
+** Geometry for parts
+*** Expand collection schema to include part geometry
+*** Frontend ability to attach geometry to parts
+*** Add query to backend to get assembled creature geometry
+*** Add frontend ability to view assembled creature
+*** Front-end gallery
